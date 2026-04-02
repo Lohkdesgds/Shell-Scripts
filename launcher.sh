@@ -3,7 +3,7 @@
 shopt -s nullglob
 SCRIPTROOT=$(dirname "$(realpath "$0")") # path like /usr/path
 
-echo "Script source path: $SCRIPTROOT";
+#echo "Script source path: $SCRIPTROOT";
 
 generic_convert() {
     local kind="$1"; # compress, log2rec709, log2prores
