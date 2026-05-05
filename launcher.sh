@@ -66,12 +66,12 @@ generic_convert() {
     case "$kind" in
         "compresshq")
             if [[ $HAS_NVIDIA == true ]]; then
-                [[ -z "$vid_cq" ]] && vid_cq=31;
+                [[ -z "$vid_cq" ]] && vid_cq=35;
                 [[ -z "$vid_pr" ]] && vid_pr="p7";
                 [[ -z "$vid_tn" ]] && vid_tn="hq";
                 [[ -z "$vid_pf" ]] && vid_pf="main";
             else
-                [[ -z "$vid_cq" ]] && vid_cq=20;
+                [[ -z "$vid_cq" ]] && vid_cq=29;
                 [[ -z "$vid_pr" ]] && vid_pr="slow";
                 [[ -z "$vid_tn" ]] && vid_tn="film";
                 [[ -z "$vid_pf" ]] && vid_pf="high";
@@ -89,7 +89,7 @@ generic_convert() {
                 [[ -z "$vid_tn" ]] && vid_tn="hq";
                 [[ -z "$vid_pf" ]] && vid_pf="main";
             else
-                [[ -z "$vid_cq" ]] && vid_cq=30; # Higher CRF = More compression
+                [[ -z "$vid_cq" ]] && vid_cq=31; # Higher CRF = More compression
                 [[ -z "$vid_pr" ]] && vid_pr="slow";
                 [[ -z "$vid_tn" ]] && vid_tn="film";
                 [[ -z "$vid_pf" ]] && vid_pf="high";
@@ -125,7 +125,7 @@ generic_convert() {
                 [[ -z "$vid_tn" ]] && vid_tn="hq";
                 [[ -z "$vid_pf" ]] && vid_pf="main";
             else
-                [[ -z "$vid_cq" ]] && vid_cq=30;
+                [[ -z "$vid_cq" ]] && vid_cq=31;
                 [[ -z "$vid_pr" ]] && vid_pr="slow";
                 [[ -z "$vid_tn" ]] && vid_tn="film";
                 [[ -z "$vid_pf" ]] && vid_pf="high";
@@ -344,7 +344,7 @@ generic_convert() {
 
             #echo "Command: ${COMMAND[@]}";
 
-            "${COMMAND[@]}" 2>log.log
+            "${COMMAND[@]}" 2>/dev/null
 
             echo -e  "[##################################################] 100.00% - $item @ Q=$jpg_cq%   "
 
@@ -364,7 +364,7 @@ generic_convert() {
 
             #echo "Command: ${COMMAND[@]}";
 
-            "${COMMAND[@]}" 2>log.log | print_progress "$DURATION_MS" "$item" "$vid_cq" "$vid_sc"
+            "${COMMAND[@]}" 2>/dev/null | print_progress "$DURATION_MS" "$item" "$vid_cq" "$vid_sc"
             mv "$item" "$trash_path/"
 
             counter=$((counter + 1))
