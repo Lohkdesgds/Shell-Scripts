@@ -14,7 +14,7 @@ generic_convert() {
     mkdir -p $trash_path
 
     while [[ -z "$kind" ]]; do
-        echo -n "- What type of conversion you want? [compress, edit, log2rec709, compresslog2rec709, log2prores]: ";
+        echo -n "- What type of conversion you want? [compress, compresshq, edit, log2rec709, compresslog2rec709, log2prores]: ";
         read -p "" kind;
     done
     while [[ -z "$type" ]]; do
@@ -37,51 +37,101 @@ generic_convert() {
     local vid_pr="$PRESET"; # preset
     local vid_tn="$TUNE"; # tune
     local vid_pf="$PROFILE"; # profile
-    local vid_rc="$RC"; # rc
     local vid_sc="$SCALE"; # scaling presets
     local vid_la="$LOOKAHEAD"; # lookahead
     local vid_ak="$AUDIO_KBPS"; # audio kbps
     local vid_am="$AUDIO_MIX"; # downmix
     local vid_px="$PIXFMT"; # pixel format (optional)
     local vid_ext="mp4";
-    local vid_fil=""; # extra filters (optional)
+    local vid_fil=(); # extra filters (optional)
     local vid_cls=""; # colorspace (optional)
     local vid_cpr=""; # color_primaries (optional)
     local vid_trc=""; # color_trc (optional)
+    local HAS_NVIDIA=false
 
-    # By kind, set profiles
+    if command -v nvidia-smi &> /dev/null && nvidia-smi -L &> /dev/null; then
+        if [[ "$USE_CPU" != "true" ]]; then
+            echo "NVIDIA GPU detected. It will be used for encoding."
+            HAS_NVIDIA=true
+        else
+            echo "NVIDIA GPU detected, but USE_CPU set to true. Using x264 encoding."
+            HAS_NVIDIA=false
+        fi
+    else
+        echo "NVIDIA GPU not found or drivers not responding. Falling back to CPU."
+        HAS_NVIDIA=false
+    fi
+
+    # By kind, set profiles for x264
     case "$kind" in
+        "compresshq")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=31;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=20;
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
+            [[ -z "$jpg_cq" ]] && jpg_cq=55;
+            [[ -z "$vid_sc" ]] && vid_sc="8";
+            [[ -z "$vid_ak" ]] && vid_ak="160";
+            [[ -z "$vid_am" ]] && vid_am="false";
+        ;;
         "compress")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=37;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=30; # Higher CRF = More compression
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
             [[ -z "$jpg_cq" ]] && jpg_cq=40;
-            [[ -z "$vid_cq" ]] && vid_cq=37;
-            [[ -z "$vid_pr" ]] && vid_pr="p7";
-            [[ -z "$vid_tn" ]] && vid_tn="hq";
-            [[ -z "$vid_pf" ]] && vid_pf="main";
-            [[ -z "$vid_rc" ]] && vid_rc="constqp";
             [[ -z "$vid_sc" ]] && vid_sc="9";
-            [[ -z "$vid_la" ]] && vid_la="40";
             [[ -z "$vid_ak" ]] && vid_ak="128";
             [[ -z "$vid_am" ]] && vid_am="false";
         ;;
         "edit")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=24;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=18;
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
             [[ -z "$jpg_cq" ]] && jpg_cq=70;
-            [[ -z "$vid_cq" ]] && vid_cq=24;
-            [[ -z "$vid_pr" ]] && vid_pr="p7";
-            [[ -z "$vid_tn" ]] && vid_tn="hq";
-            [[ -z "$vid_pf" ]] && vid_pf="main";
-            [[ -z "$vid_rc" ]] && vid_rc="constqp";
             [[ -z "$vid_sc" ]] && vid_sc="0";
-            [[ -z "$vid_la" ]] && vid_la="40";
             [[ -z "$vid_ak" ]] && vid_ak="256";
             [[ -z "$vid_am" ]] && vid_am="false";
         ;;
         "compresslog2rec709")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=37;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=30;
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
             [[ -z "$jpg_cq" ]] && jpg_cq=40;
-            [[ -z "$vid_cq" ]] && vid_cq=37;
-            [[ -z "$vid_pr" ]] && vid_pr="p7";
-            [[ -z "$vid_tn" ]] && vid_tn="hq";
-            [[ -z "$vid_pf" ]] && vid_pf="main";
-            [[ -z "$vid_rc" ]] && vid_rc="constqp";
             [[ -z "$vid_sc" ]] && vid_sc="9";
             [[ -z "$vid_la" ]] && vid_la="40";
             [[ -z "$vid_ak" ]] && vid_ak="128";
@@ -90,24 +140,31 @@ generic_convert() {
             vid_cls="bt709";
             vid_cpr="bt709";
             vid_trc="bt709";
-            vid_fil="format=gbrpf32le,lut3d='$SCRIPTROOT/lut.cube',hue=s=1.00,format=yuv420p,setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709"
+            vid_fil=("format=gbrpf32le" "lut3d='$SCRIPTROOT/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
         ;;
         "log2rec709")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=24;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=18;
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
             [[ -z "$jpg_cq" ]] && jpg_cq=70;
-            [[ -z "$vid_cq" ]] && vid_cq=24;
-            [[ -z "$vid_pr" ]] && vid_pr="p7";
-            [[ -z "$vid_tn" ]] && vid_tn="hq";
-            [[ -z "$vid_pf" ]] && vid_pf="main";
-            [[ -z "$vid_rc" ]] && vid_rc="constqp";
             [[ -z "$vid_sc" ]] && vid_sc="0";
             [[ -z "$vid_la" ]] && vid_la="40";
-            [[ -z "$vid_ak" ]] && vid_ak="128";
+            [[ -z "$vid_ak" ]] && vid_ak="256";
             [[ -z "$vid_am" ]] && vid_am="false";
             vid_px="yuv420p";
             vid_cls="bt709";
             vid_cpr="bt709";
             vid_trc="bt709";
-            vid_fil="format=gbrpf32le,lut3d='$SCRIPTROOT/lut.cube',hue=s=1.00,format=yuv420p,setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709"
+            vid_fil=("format=gbrpf32le" "lut3d='$SCRIPTROOT/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
         ;;
         "log2prores")
             vid_ext="mov";
@@ -119,11 +176,17 @@ generic_convert() {
         CMD_FFMPEG_END=(-c:v prores_ks -vsync 0 -profile:v 1 -pix_fmt yuv422p10le -c:a copy)
     else # non prores
         # Begin arguments for ffmpeg
-        CMD_FFMPEG_BEG=(-hide_banner -loglevel error -hwaccel cuda -progress - -y -i)
-        CMD_FFMPEG_END=(-c:v hevc_nvenc -vsync 0)
+        if [[ $HAS_NVIDIA == true ]]; then
+            CMD_FFMPEG_BEG=(-hide_banner -loglevel error -hwaccel cuda -progress - -y -i)
+            CMD_FFMPEG_END=(-c:v hevc_nvenc -vsync 0)
+        else
+            CMD_FFMPEG_BEG=(-hide_banner -loglevel error -progress - -y -i)
+            CMD_FFMPEG_END=(-c:v libx264 -vsync 0)
+        fi
 
         # Get special mappings
         [[ "$vid_am" == "true" ]] && CMD_FFMPEG_END+=(-vol 256 -af "pan=stereo|c0=0.5*c2+0.707*c0+0.707*c4+0.5*c3|c1=0.5*c2+0.707*c1+0.707*c5+0.5*c3");
+        
         case "$vid_sc" in
             1)  vid_fil+=("scale=in_w*0.5:in_h*0.5") ;;
             2)  vid_fil+=("scale=in_w*0.333:in_h*0.333") ;;
@@ -142,24 +205,37 @@ generic_convert() {
 
         VIDEO_FORMAT=$(IFS=,; echo "${vid_fil[*]}");
 
+        if [[ -n "$VIDEO_FORMAT" ]]; then
+            CMD_FFMPEG_END+=(-vf "$VIDEO_FORMAT")
+        fi
+
         # Map to ffmpeg
-        CMD_FFMPEG_END+=(
-            -vf "$VIDEO_FORMAT"
-            -ab "${vid_ak}k"
-            -preset "$vid_pr"
-            -tune "$vid_tn"
-            -profile "$vid_pf"
-            -rc "$vid_rc"
-            -qp "$vid_cq"
-            -bf 0
-            -rc-lookahead "$vid_la"
-#            -2pass 1
-            -gpu any
-            -spatial-aq 1
-#            -temporal-aq 1
-            -aq-strength 15
-#            -multipass fullres
-        )
+        if [[ $HAS_NVIDIA == true ]]; then
+            CMD_FFMPEG_END+=(
+                -b:a "${vid_ak}k"
+                -preset "$vid_pr"
+                -tune "$vid_tn"
+                -profile:v "$vid_pf"
+                -rc "constqp"
+                -qp "$vid_cq"
+                -bf 0
+                -rc-lookahead "40"
+                -gpu any
+                -spatial-aq 1
+                -aq-strength 15
+            )
+        else
+            CMD_FFMPEG_END+=(
+                -b:a "${vid_ak}k"
+                -preset "$vid_pr"
+                -tune "$vid_tn"
+                -profile:v "$vid_pf"
+                -crf "$vid_cq"
+    #            -x264-params "rc-lookahead=$vid_la" # This passes the lookahead value to x264
+                -pix_fmt yuv420p
+            )
+        fi
+        
         [[ -n "$vid_px" ]] && CMD_FFMPEG_END+=(-pix_fmt "$vid_px");
         [[ -n "$vid_cls" ]] && CMD_FFMPEG_END+=(-colorspace "$vid_cls");
         [[ -n "$vid_cpr" ]] && CMD_FFMPEG_END+=(-color_primaries "$vid_cpr");
@@ -268,7 +344,7 @@ generic_convert() {
 
             #echo "Command: ${COMMAND[@]}";
 
-            "${COMMAND[@]}" 2>/dev/null
+            "${COMMAND[@]}" 2>log.log
 
             echo -e  "[##################################################] 100.00% - $item @ Q=$jpg_cq%   "
 
@@ -288,7 +364,7 @@ generic_convert() {
 
             #echo "Command: ${COMMAND[@]}";
 
-            "${COMMAND[@]}" 2>/dev/null | print_progress "$DURATION_MS" "$item" "$vid_cq" "$vid_sc"
+            "${COMMAND[@]}" 2>log.log | print_progress "$DURATION_MS" "$item" "$vid_cq" "$vid_sc"
             mv "$item" "$trash_path/"
 
             counter=$((counter + 1))
@@ -398,7 +474,7 @@ case "$1" in
         echo "- minessh: Connect to Minecraft VPN though SSH";
 #        echo "- minessh_transfer: Transfer file to Minecraft VPN though SSH";
         echo "- minessh_mount: Mounts Minecraft VPN to /media folder";
-        echo "- convert <compress, edit, log2rec709, log2prores> <file, folder, recursive> <file?>: Convert anything";
+        echo "- convert <compress, compresshq, edit, log2rec709, log2prores> <file, folder, recursive> <file?>: Convert anything";
         echo "- sort_samsung: sorts ALL files to folders.";
     ;;
 esac
