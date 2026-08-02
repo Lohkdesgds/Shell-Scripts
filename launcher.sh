@@ -1,6 +1,6 @@
 #!/bin/bash
 
-shopt -s nullglob
+shopt -s nullglob nocaseglob
 SCRIPTROOT=$(dirname "$(realpath "$0")") # path like /usr/path
 
 #echo "Script source path: $SCRIPTROOT";
@@ -10,8 +10,8 @@ generic_convert() {
     local type="$2"; # file, folder, recursive
     local file="$3"; # <file> if type=="file"
 
-    local trash_path=$PWD/.converted;
-    mkdir -p $trash_path
+    local trash_path="$PWD/.converted";
+    mkdir -p "$trash_path"
 
     while [[ -z "$kind" ]]; do
         echo -n "- What type of conversion you want? [compress, compresshq, edit, log2rec709, compresslog2rec709, log2prores]: ";
@@ -462,6 +462,9 @@ case "$1" in
     "minessh_mount")
         mkdir -p /media/lohk/AzureMinecraftHost
         sshfs -o IdentityFile="$MINECRAFT_KEY_FILE_PATH" "$MINECRAFT_CONNECTION_ADDR":/home/lohk /media/lohk/AzureMinecraftHost
+    ;;
+    "minessh_umount")
+        umount /media/lohk/AzureMinecraftHost
     ;;
     "convert")
         generic_convert "$2" "$3" "$4";
