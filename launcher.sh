@@ -477,7 +477,7 @@ case "$1" in
         echo "- minessh: Connect to Minecraft VPN though SSH";
 #        echo "- minessh_transfer: Transfer file to Minecraft VPN though SSH";
         echo "- minessh_mount: Mounts Minecraft VPN to /media folder";
-        echo "- convert <compress, compresshq, edit, log2rec709, log2prores> <file, folder, recursive> <file?>: Convert anything";
+        echo "- convert <compress, compresshq, edit, log2rec709, compresslog2rec709, log2prores> <file, folder, recursive> <file?>: Convert anything";
         echo "- sort_samsung: sorts ALL files to folders.";
     ;;
 esac
