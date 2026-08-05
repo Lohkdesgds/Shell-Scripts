@@ -544,6 +544,30 @@ automatic_sort() {
             # Move file
             mv -- "$file" "$dest_dir/"
             echo "[6] Moved '$file' to '$dest_dir'"
+        elif [[ "$file" =~ ^[0-9]{3}-VIDEO_[0-9]{2}mm-([0-9]{2})([0-9]{2})([0-9]{2})_.*$ ]]; then
+            year="20${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[2]}"
+            day="${BASH_REMATCH[3]}"
+
+            # Create destination directory
+            dest_dir="$year/$month/$day"
+            mkdir -p "$dest_dir"
+
+            # Move file
+            mv -- "$file" "$dest_dir/"
+            echo "[6] Moved '$file' to '$dest_dir'"
+        elif [[ "$file" =~ ^[0-9]{3}-VIDEO_[0-9]{3}mm-([0-9]{2})([0-9]{2})([0-9]{2})_.*$ ]]; then
+            year="20${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[2]}"
+            day="${BASH_REMATCH[3]}"
+
+            # Create destination directory
+            dest_dir="$year/$month/$day"
+            mkdir -p "$dest_dir"
+
+            # Move file
+            mv -- "$file" "$dest_dir/"
+            echo "[6] Moved '$file' to '$dest_dir'"
         fi
     done
 }
