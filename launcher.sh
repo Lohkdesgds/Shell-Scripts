@@ -14,7 +14,7 @@ generic_convert() {
     mkdir -p "$trash_path"
 
     while [[ -z "$kind" ]]; do
-        echo -n "- What type of conversion you want? [compress, compresshq, edit, log2rec709, compresslog2rec709, log2prores]: ";
+        echo -n "- What type of conversion you want? [compress, compresshq, edit, log2rec709, compresslog2rec709, slog2rec709, compressslog2rec709, log2prores]: ";
         read -p "" kind;
     done
     while [[ -z "$type" ]]; do
@@ -165,6 +165,54 @@ generic_convert() {
             vid_cpr="bt709";
             vid_trc="bt709";
             vid_fil=("format=gbrpf32le" "lut3d='$SCRIPTROOT/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
+        ;;
+        "compressslog2rec709")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=37;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=31;
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
+            [[ -z "$jpg_cq" ]] && jpg_cq=40;
+            [[ -z "$vid_sc" ]] && vid_sc="9";
+            [[ -z "$vid_la" ]] && vid_la="40";
+            [[ -z "$vid_ak" ]] && vid_ak="128";
+            [[ -z "$vid_am" ]] && vid_am="false";
+            vid_px="yuv420p";
+            vid_cls="bt709";
+            vid_cpr="bt709";
+            vid_trc="bt709";
+            vid_fil=("format=gbrpf32le" "lut3d='$SCRIPTROOT/lut2.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
+        ;;
+        "slog2rec709")
+            if [[ $HAS_NVIDIA == true ]]; then
+                [[ -z "$vid_cq" ]] && vid_cq=24;
+                [[ -z "$vid_pr" ]] && vid_pr="p7";
+                [[ -z "$vid_tn" ]] && vid_tn="hq";
+                [[ -z "$vid_pf" ]] && vid_pf="main";
+            else
+                [[ -z "$vid_cq" ]] && vid_cq=18;
+                [[ -z "$vid_pr" ]] && vid_pr="slow";
+                [[ -z "$vid_tn" ]] && vid_tn="film";
+                [[ -z "$vid_pf" ]] && vid_pf="high";
+            fi
+
+            [[ -z "$jpg_cq" ]] && jpg_cq=70;
+            [[ -z "$vid_sc" ]] && vid_sc="0";
+            [[ -z "$vid_la" ]] && vid_la="40";
+            [[ -z "$vid_ak" ]] && vid_ak="256";
+            [[ -z "$vid_am" ]] && vid_am="false";
+            vid_px="yuv420p";
+            vid_cls="bt709";
+            vid_cpr="bt709";
+            vid_trc="bt709";
+            vid_fil=("format=gbrpf32le" "lut3d='$SCRIPTROOT/lut2.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
         ;;
         "log2prores")
             vid_ext="mov";
@@ -424,6 +472,30 @@ automatic_sort() {
             # Move file
             mv -- "$file" "$dest_dir/"
             echo "[4] Moved '$file' to '$dest_dir'"
+        elif [[ "$file" =~ ^VID_([0-9]{4})([0-9]{2})([0-9]{2})_.*$ ]]; then
+            year="${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[2]}"
+            day="${BASH_REMATCH[3]}"
+
+            # Create destination directory
+            dest_dir="$year/$month/$day"
+            mkdir -p "$dest_dir"
+
+            # Move file
+            mv -- "$file" "$dest_dir/"
+            echo "[4] Moved '$file' to '$dest_dir'"
+        elif [[ "$file" =~ ^V_([0-9]{4})([0-9]{2})([0-9]{2})_.*$ ]]; then
+            year="${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[2]}"
+            day="${BASH_REMATCH[3]}"
+
+            # Create destination directory
+            dest_dir="$year/$month/$day"
+            mkdir -p "$dest_dir"
+
+            # Move file
+            mv -- "$file" "$dest_dir/"
+            echo "[4] Moved '$file' to '$dest_dir'"
         elif [[ "$file" =~ ^IMG_([0-9]{4})([0-9]{2})([0-9]{2})_.*$ ]]; then
             year="${BASH_REMATCH[1]}"
             month="${BASH_REMATCH[2]}"
@@ -437,6 +509,30 @@ automatic_sort() {
             mv -- "$file" "$dest_dir/"
             echo "[5] Moved '$file' to '$dest_dir'"
         elif [[ "$file" =~ ^PXL_([0-9]{4})([0-9]{2})([0-9]{2})_.*$ ]]; then
+            year="${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[2]}"
+            day="${BASH_REMATCH[3]}"
+
+            # Create destination directory
+            dest_dir="$year/$month/$day"
+            mkdir -p "$dest_dir"
+
+            # Move file
+            mv -- "$file" "$dest_dir/"
+            echo "[6] Moved '$file' to '$dest_dir'"
+        elif [[ "$file" =~ ^ProShot_([0-9]{4})([0-9]{2})([0-9]{2})_.*$ ]]; then
+            year="${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[2]}"
+            day="${BASH_REMATCH[3]}"
+
+            # Create destination directory
+            dest_dir="$year/$month/$day"
+            mkdir -p "$dest_dir"
+
+            # Move file
+            mv -- "$file" "$dest_dir/"
+            echo "[6] Moved '$file' to '$dest_dir'"
+        elif [[ "$file" =~ ^photo_([0-9]{4})([0-9]{2})([0-9]{2})_.*$ ]]; then
             year="${BASH_REMATCH[1]}"
             month="${BASH_REMATCH[2]}"
             day="${BASH_REMATCH[3]}"
@@ -477,7 +573,7 @@ case "$1" in
         echo "- minessh: Connect to Minecraft VPN though SSH";
 #        echo "- minessh_transfer: Transfer file to Minecraft VPN though SSH";
         echo "- minessh_mount: Mounts Minecraft VPN to /media folder";
-        echo "- convert <compress, compresshq, edit, log2rec709, compresslog2rec709, log2prores> <file, folder, recursive> <file?>: Convert anything";
+        echo "- convert <compress, compresshq, edit, log2rec709, compresslog2rec709, slog2rec709, compressslog2rec709, log2prores> <file, folder, recursive> <file?>: Convert anything";
         echo "- sort_samsung: sorts ALL files to folders.";
     ;;
 esac
