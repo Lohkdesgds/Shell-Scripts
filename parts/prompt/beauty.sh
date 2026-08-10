@@ -9,7 +9,7 @@ __prompt() {
 
     local str="\n\[${CLR_8}\]┌";
 
-    [[ -n "${pf_str:-}" ]] && str+="› \[${CLR_F}\]${pf_str} \[${CLR_8}\]"
+    [[ -n "${pf_str:-}" && "$pf_str" != "default" ]] && str+="› \[${CLR_F}\]${pf_str} \[${CLR_8}\]"
     [[ -n "${py_str:-}" ]] && str+="› \[${CLR_B}\]${py_str} \[${CLR_8}\]"
     [[ -n "${gh_str:-}" ]] && str+="› \[${CLR_6}\]${gh_str} \[${CLR_8}\]"
     str+="› \[${CLR_3}\]${pt_str}"

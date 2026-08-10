@@ -2,6 +2,8 @@ unset ___LOADED_PROFILE_SET;
 declare -g -A ___LOADED_PROFILE_SET;
 
 __setup_profiles() {
+    [[ -z "${CFG_PROFILE:-}" ]] && set_global_env "CFG_PROFILE" "default";
+
     local -r environments_path="$HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
     mkdir -p "$environments_path";
 
