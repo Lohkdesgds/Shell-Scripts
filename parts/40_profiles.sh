@@ -48,9 +48,9 @@ set_profile() {
     local -r profile="${1:-}";
 
     if [[ -z "$profile" ]]; then
-        printf "${CLR_B}[✔]${CLR_R} Disabled profiles.\n";
+        printf "${CLR_B}[✔]${CLR_R} Using default profile.\n";
         sleep 1;
-        set_global_env "CFG_PROFILE" ""; 
+        set_global_env "CFG_PROFILE" "default"; 
         unset ___LOADED_PROFILE_SET;
         clean;
     fi

@@ -1,14 +1,17 @@
-export SETTINGS_PATH="$HOME/.bashrc";
+export SETTINGS_PATH="$HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+export SETTINGS_FILE="$SETTINGS_PATH/default.sh";
 
 set_global_env() {
     local -r key="${1:-}";
     local -r value="${2:-}";
-    local -r file="${3:-$SETTINGS_PATH}"
+    local -r file="${3:-$SETTINGS_FILE}"
 
     if [[ -z "$key" ]]; then
         echo "Usage: <command> <key> <value>";
         return 1;
     fi
+
+    mkdir -p "$SETTINGS_PATH"
 
     local escaped_value=$(printf '%s\n' "$value" | sed -e 's/[\/&|\\]/\\&/g')
 
@@ -106,10 +109,6 @@ pipi() {
             pip install -r requirements.txt;
         fi
     fi
-}
-
-edit_global_keys() {
-    nano "$SETTINGS_PATH";
 }
 
 edit_project() {
