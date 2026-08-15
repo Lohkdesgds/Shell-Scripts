@@ -1,8 +1,8 @@
-local kind="${1:-}"; # compress, log2rec709, log2prores
-local type="${2:-}"; # file, folder, recursive
-local file="${3:-}"; # <file> if type=="file"
+kind="${1:-}"; # compress, log2rec709, log2prores
+type="${2:-}"; # file, folder, recursive
+file="${3:-}"; # <file> if type=="file"
 
-local trash_path="$PWD/.converted";
+trash_path="$PWD/.converted";
 mkdir -p "$trash_path"
 
 while [[ -z "$kind" ]]; do
@@ -24,22 +24,22 @@ echo "Working with arguments:";
 [[ -n "$file" ]] && echo "- File: $file";
 
 # Capture possible custom args on call
-local jpg_cq="$CQP"; # for jpg
-local vid_cq="$QUALITY"; # cqp
-local vid_pr="$PRESET"; # preset
-local vid_tn="$TUNE"; # tune
-local vid_pf="$PROFILE"; # profile
-local vid_sc="$SCALE"; # scaling presets
-local vid_la="$LOOKAHEAD"; # lookahead
-local vid_ak="$AUDIO_KBPS"; # audio kbps
-local vid_am="$AUDIO_MIX"; # downmix
-local vid_px="$PIXFMT"; # pixel format (optional)
-local vid_ext="mp4";
-local vid_fil=(); # extra filters (optional)
-local vid_cls=""; # colorspace (optional)
-local vid_cpr=""; # color_primaries (optional)
-local vid_trc=""; # color_trc (optional)
-local HAS_NVIDIA=false
+jpg_cq="$CQP"; # for jpg
+vid_cq="$QUALITY"; # cqp
+vid_pr="$PRESET"; # preset
+vid_tn="$TUNE"; # tune
+vid_pf="$PROFILE"; # profile
+vid_sc="$SCALE"; # scaling presets
+vid_la="$LOOKAHEAD"; # lookahead
+vid_ak="$AUDIO_KBPS"; # audio kbps
+vid_am="$AUDIO_MIX"; # downmix
+vid_px="$PIXFMT"; # pixel format (optional)
+vid_ext="mp4";
+vid_fil=(); # extra filters (optional)
+vid_cls=""; # colorspace (optional)
+vid_cpr=""; # color_primaries (optional)
+vid_trc=""; # color_trc (optional)
+HAS_NVIDIA=false
 
 if command -v nvidia-smi &> /dev/null && nvidia-smi -L &> /dev/null; then
     if [[ "$USE_CPU" != "true" ]]; then
@@ -328,8 +328,8 @@ MAGICK_LIST=();
 
 case "$type" in
     "file")
-        local file_ext="${file##*.}"
-        local file_ext_lower="${file_ext,,}"
+        file_ext="${file##*.}"
+        file_ext_lower="${file_ext,,}"
 
         if [[ " ${MAGICK_SUPPORTED[*],,} " =~ " ${file_ext_lower} " ]]; then
             MAGICK_LIST+=($file);
@@ -368,13 +368,13 @@ case "$type" in
     ;;
 esac
 
-local video_len="${#FFMPEG_LIST[@]}";
-local photo_len="${#MAGICK_LIST[@]}";
+video_len="${#FFMPEG_LIST[@]}";
+photo_len="${#MAGICK_LIST[@]}";
 
 echo "Working on $video_len video(s) and $photo_len photo(s)...";
 
 if [[ "$photo_len" > 0 ]]; then
-    local counter=1
+    counter=1
     for item in "${MAGICK_LIST[@]}"; do
         printf "Working on $item ($counter of $photo_len)...\n"
 
@@ -394,7 +394,7 @@ if [[ "$photo_len" > 0 ]]; then
     done
 fi
 if [[ "$video_len" > 0 ]]; then
-    local counter=1
+    counter=1
     for item in "${FFMPEG_LIST[@]}"; do
         printf "Working on $item ($counter of $video_len)...\n"
 
