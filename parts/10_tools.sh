@@ -134,10 +134,10 @@ ms() {
     done
 
     if $match; then
-        printf "${CLR_B}[✔]${CLR_R} Calling '${opt} ${@:2}'...\n";
-
+        printf "${CLR_B}[✔]${CLR_R} Calling '%s %s'...\n", "${opt}" "${*:2}";
+        sleep 3;
         chmod +x "$SCRIPT_DIR/parts/scripts/${opt}.sh";
-        "$SCRIPT_DIR/parts/scripts/${opt}.sh" "${@:2}";
+        #"$SCRIPT_DIR/parts/scripts/${opt}.sh" "${@:2}";
     else
         printf "${CLR_1}[!]${CLR_R} Invalid option.\n";
         printf "${CLR_B}[@]${CLR_R} Installed scripts: ${CLR_6}%s${CLR_R}.\n" "${scripts[*]}";

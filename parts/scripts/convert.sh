@@ -332,9 +332,9 @@ case "$type" in
         file_ext_lower="${file_ext,,}"
 
         if [[ " ${MAGICK_SUPPORTED[*],,} " =~ " ${file_ext_lower} " ]]; then
-            MAGICK_LIST+=($file);
+            MAGICK_LIST+=("$file");
         elif [[ " ${FFMPEG_SUPPORTED[*],,} " =~ " ${file_ext_lower} " ]]; then
-            FFMPEG_LIST+=($file);
+            FFMPEG_LIST+=("$file");
         else
             echo "No matched valid options for file extension. Abort.";
             exit 1;
