@@ -18,7 +18,7 @@ __load_python_virtual_env() {
 __load_python_virtual_env;
 
 install_python_venv() {
-    local path="${1:-${PYTHON_VENV_PATH:-$HOME/py_venv}}"
+    local path="${1:-${PYTHON_VENV_BASE_PATH:-$HOME/py_venv}}"
     local exec="${path}/bin/activate"
 
     python -m venv "$path";
