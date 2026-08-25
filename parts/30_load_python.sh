@@ -8,7 +8,7 @@ __load_python_virtual_env() {
     if [[ "${PYTHON_VENV_SEL:-}" == "venv" ]]; then
         source "$PYTHON_VENV_PATH/bin/activate";        
     elif [[ "${PYTHON_VENV_SEL:-}" == "pipenv" ]]; then
-        WORKON_HOME="$HOME/.virtualenvs" PIPENV_CUSTOM_VENV_NAME="$PYTHON_VENV_SEL" pipenv shell;
+        WORKON_HOME="$VIRTUAL_HOME/.virtualenvs" PIPENV_CUSTOM_VENV_NAME="$PYTHON_VENV_SEL" pipenv shell;
         clear;
     fi
 
@@ -18,7 +18,7 @@ __load_python_virtual_env() {
 __load_python_virtual_env;
 
 install_python_venv() {
-    local path="${1:-${PYTHON_VENV_BASE_PATH:-$HOME/py_venv}}"
+    local path="${1:-${PYTHON_VENV_BASE_PATH:-$VIRTUAL_HOME/py_venv}}"
     local exec="${path}/bin/activate"
 
     python -m venv "$path";

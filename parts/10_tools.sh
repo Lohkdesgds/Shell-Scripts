@@ -1,4 +1,4 @@
-export SETTINGS_PATH="$HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+export SETTINGS_PATH="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
 export SETTINGS_FILE="$SETTINGS_PATH/default.sh";
 
 set_global_env() {
