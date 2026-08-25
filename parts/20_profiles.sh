@@ -7,7 +7,7 @@ __setup_profiles() {
     local -r environments_path="$SETTINGS_PATH";
     mkdir -p "$environments_path";
 
-    if import_profile "${CFG_PROFILE:-}"; then
+    if [[ "${CFG_PROFILE:-}" == "default" ]] || import_profile "${CFG_PROFILE:-}"; then
         export PROFILE_LOADED="${CFG_PROFILE:-}";
     else
         unset PROFILE_LOADED;
@@ -44,6 +44,27 @@ edit_profile() {
 
     touch "$profile_path";
     nano "$profile_path";
+}
+
+remove_profile() {
+    local -r profile="${1:-${CFG_PROFILE:-}}"
+
+    if [[ -z "$profile" ]]; then
+        printf "${CLR_1}[!]${CLR_R} Profile not set nor given.\n";
+        return 1;
+    elif [[ "$profile" == "$SETTINGS_CFG_NAME" ]]; then
+        printf "${CLR_1}[!]${CLR_R} You are not allowed to delete the default profile.\n";
+        return 2;        
+    fi
+
+    local -r environments_path="$SETTINGS_PATH";
+    local -r environments_trash_path="$SETTINGS_PATH/.trashbin";
+    local -r profile_path="$environments_path/$profile.sh";
+
+    mkdir -p "$environments_trash_path";
+
+    [[ -f "$profile_path" ]] && mv "$profile_path" "$environments_trash_path/";
+    printf "${CLR_B}[✔]${CLR_R} Trashed profile '$profile'.\n";
 }
 
 set_profile() {
@@ -86,6 +107,11 @@ import_profile() {
     local -r imported="$1"
     local -r environments_path="$SETTINGS_PATH";
     local -r current_env="$environments_path/$imported.sh"
+
+    if [[ "$imported" == "default" ]]; then
+        printf "${CLR_1}[!]${CLR_R} Attention: 'default' profile does not need to be imported, it is part of the program and it will always be loaded.\n";
+        return 0;
+    fi
 
     if [[ -n "$imported" && -f "$current_env" ]]; then
         if [[ -n "${___LOADED_PROFILE_SET[$imported]:-}" ]]; then

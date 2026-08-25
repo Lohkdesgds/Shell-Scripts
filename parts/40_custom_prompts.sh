@@ -89,8 +89,9 @@ set_prompt() {
     local match=false;
 
     local prompts=();
+    local -r prompts_path="$SCRIPT_DIR/parts/prompt";
 
-    for path in "$SCRIPT_DIR/parts/prompt/"*.sh; do
+    for path in "$prompts_path"/*.sh; do
         local name="${path##*/}"
         name="${name%.sh}";
 
@@ -116,6 +117,21 @@ set_prompt() {
         printf "${CLR_B}[@]${CLR_R} Installed prompts: ${CLR_6}%s${CLR_R}.\n" "${prompts[*]}";
         printf "${CLR_B}[@]${CLR_R} Currently using ${PROMPT_SELECTED}";
     fi
+}
+
+list_prompts() {
+    local prompts=();
+    local -r prompts_path="$SCRIPT_DIR/parts/prompt";
+
+    for path in "$prompts_path"/*.sh; do
+        local name="${path##*/}"
+        name="${name%.sh}";
+
+        [[ "$name" == _* ]] && continue;
+        prompts+=("$name");
+    done
+    
+    printf "${CLR_B}[✔]${CLR_R} List of prompts: ${CLR_6}%s${CLR_R}.\n" "${prompts[*]}";
 }
 
 _enable_prompt_features

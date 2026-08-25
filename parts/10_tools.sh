@@ -1,5 +1,6 @@
 export SETTINGS_PATH="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
-export SETTINGS_FILE="$SETTINGS_PATH/default.sh";
+export SETTINGS_CFG_NAME="default";
+export SETTINGS_FILE="$SETTINGS_PATH/$SETTINGS_CFG_NAME.sh";
 
 source "$SETTINGS_FILE";
 
