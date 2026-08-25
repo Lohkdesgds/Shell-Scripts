@@ -1,6 +1,8 @@
 export SETTINGS_PATH="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
 export SETTINGS_FILE="$SETTINGS_PATH/default.sh";
 
+source "$SETTINGS_FILE";
+
 set_global_env() {
     local -r key="${1:-}";
     local -r value="${2:-}";
@@ -140,5 +142,21 @@ ms() {
     else
         printf "${CLR_1}[!]${CLR_R} Invalid option.\n";
         printf "${CLR_B}[@]${CLR_R} Installed scripts: ${CLR_6}%s${CLR_R}.\n" "${scripts[*]}";
+    fi
+}
+
+update() {
+    printf "${CLR_B}[✔]${CLR_R} Attempting to update scripts...\n";
+
+    local -r current_path=$(pwd);
+    cd "$SCRIPT_DIR";
+    local -r response=$(git pull 2>&1);
+    cd "$current_path";
+
+    if [[ "$response" == "Already up to date." ]]; then
+        printf "${CLR_B}[✔]${CLR_R} Up to date!\n";
+    else
+        printf "${CLR_1}[!]${CLR_R} Got update or something:\n%s\n" "$response";
+        printf "${CLR_B}[✔]${CLR_R} Possibly use ${CLR_C}clean${CLR_R} to apply changes, if any.\n";
     fi
 }
