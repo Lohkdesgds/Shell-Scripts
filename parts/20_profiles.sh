@@ -4,7 +4,7 @@ declare -g -A ___LOADED_PROFILE_SET;
 __setup_profiles() {
     [[ -z "${CFG_PROFILE:-}" ]] && set_global_env "CFG_PROFILE" "default";
 
-    local -r environments_path="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+    local -r environments_path="$SETTINGS_PATH";
     mkdir -p "$environments_path";
 
     if import_profile "${CFG_PROFILE:-}"; then
@@ -17,7 +17,7 @@ __setup_profiles() {
 }
 
 _cleanup_vars() {
-    local -r environments_path="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+    local -r environments_path="$SETTINGS_PATH";
 
     for i in "${!___LOADED_PROFILE_SET[@]}"; do
         while IFS= read -r line ; do
@@ -39,7 +39,7 @@ edit_profile() {
         return 1;
     fi
 
-    local -r environments_path="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+    local -r environments_path="$SETTINGS_PATH";
     local -r profile_path="$environments_path/$profile.sh";
 
     touch "$profile_path";
@@ -57,7 +57,7 @@ set_profile() {
         clean;
     fi
 
-    local -r environments_path="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+    local -r environments_path="$SETTINGS_PATH";
     local -r profile_path="$environments_path/$profile.sh";
 
     touch "$profile_path";
@@ -69,7 +69,7 @@ set_profile() {
 
 list_profiles() {
     local profiles=();
-    local -r environments_path="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+    local -r environments_path="$SETTINGS_PATH";
 
     for path in "$environments_path"/*.sh; do
         local name="${path##*/}"
@@ -84,7 +84,7 @@ list_profiles() {
 
 import_profile() {
     local -r imported="$1"
-    local -r environments_path="$VIRTUAL_HOME/${CFG_ENVIRONMENTS_PATH:-.environments}";
+    local -r environments_path="$SETTINGS_PATH";
     local -r current_env="$environments_path/$imported.sh"
 
     if [[ -n "$imported" && -f "$current_env" ]]; then

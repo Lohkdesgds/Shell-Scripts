@@ -7,7 +7,7 @@ set_global_env() {
     local -r file="${3:-$SETTINGS_FILE}"
 
     if [[ -z "$key" ]]; then
-        echo "Usage: <command> <key> <value>";
+        echo "Usage: <command> <key> <value> [profile]";
         return 1;
     fi
 
