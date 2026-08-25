@@ -3,6 +3,12 @@ __BEGIN_SCRIPT_MS="$(( ${EPOCHREALTIME//[!0-9]/} / 1000 ))";
 export SCRIPT_ORIGIN="${BASH_SOURCE[0]}";
 export SCRIPT_DIR="$(dirname "$SCRIPT_ORIGIN")"
 
+case "$OSTYPE" in
+  msys*)    export VIRTUAL_HOME="/c/Users/$USERNAME" ;;
+  cygwin*)  export VIRTUAL_HOME="/c/Users/$USERNAME" ;;
+  *)        export VIRTUAL_HOME="$HOME" ;;
+esac
+
 shopt -s nullglob nocaseglob
 set -o pipefail
 
