@@ -213,15 +213,15 @@ esac
 
 if [[ "$vid_ext" == "mov" ]]; then # no tuning for prores output
     CMD_FFMPEG_BEG=(-hide_banner -loglevel error -progress - -y -i)
-    CMD_FFMPEG_END=(-c:v prores_ks -vsync 0 -profile:v 1 -pix_fmt yuv422p10le -c:a copy)
+    CMD_FFMPEG_END=(-c:v prores_ks -fps_mode passthrough -profile:v 1 -pix_fmt yuv422p10le -c:a copy)
 else # non prores
     # Begin arguments for ffmpeg
     if [[ $HAS_NVIDIA == true ]]; then
         CMD_FFMPEG_BEG=(-hide_banner -loglevel error -hwaccel cuda -progress - -y -i)
-        CMD_FFMPEG_END=(-c:v hevc_nvenc -vsync 0)
+        CMD_FFMPEG_END=(-c:v hevc_nvenc -fps_mode passthrough)
     else
         CMD_FFMPEG_BEG=(-hide_banner -loglevel error -progress - -y -i)
-        CMD_FFMPEG_END=(-c:v libx264 -vsync 0)
+        CMD_FFMPEG_END=(-c:v libx264 -fps_mode passthrough)
     fi
 
     # Get special mappings
@@ -384,7 +384,7 @@ if [[ "$photo_len" > 0 ]]; then
 
         #echo "Command: ${COMMAND[@]}";
 
-        "${COMMAND[@]}" 2>/dev/null
+        "${COMMAND[@]}" # 2>&1
 
         echo -e  "[##################################################] 100.00% - $item @ Q=$jpg_cq%   "
 
@@ -404,7 +404,7 @@ if [[ "$video_len" > 0 ]]; then
 
         #echo "Command: ${COMMAND[@]}";
 
-        "${COMMAND[@]}" 2>/dev/null | print_progress "$DURATION_MS" "$item" "$vid_cq" "$vid_sc"
+        "${COMMAND[@]}" | print_progress "$DURATION_MS" "$item" "$vid_cq" "$vid_sc" # 2>/dev/null
         mv "$item" "$trash_path/"
 
         counter=$((counter + 1))
