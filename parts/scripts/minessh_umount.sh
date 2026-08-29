@@ -1,1 +1,0 @@
-umount /media/lohk/AzureMinecraftHost

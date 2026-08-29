@@ -3,9 +3,6 @@ echo -e "${CLR_F}# Script tools quick guide"
 
 echo -e "\n${CLR_B}## General tools:\n"
 
-echo -e "${CLR_F}💻 ${CLR_C}help"
-echo -e "${CLR_8} ↳ ${CLR_7}Results in this help command list."
-
 echo -e "${CLR_F}💻 ${CLR_C}set_global_env <key> <value> [profile]"
 echo -e "${CLR_8} ↳ ${CLR_7}Creates or updates an environment variable set with \`export\` keyword on [profile] or default one if not given."
 
@@ -38,6 +35,7 @@ echo -e "${CLR_8} ↳ ${CLR_7}Opens this script path in VS Code. It expects \`co
 
 echo -e "${CLR_F}💻 ${CLR_C}ms [<tool> [...]]"
 echo -e "${CLR_8} ↳ ${CLR_7}Multi Script caller, useful for calling fancier functionality in this project. The arguments are one to many, depending on the tool being called."
+echo -e "${CLR_8} ↳ ${CLR_7}** This has its own section in the end of this help"
 
 echo -e "${CLR_F}💻 ${CLR_C}update"
 echo -e "${CLR_8} ↳ ${CLR_7}Attempts to do a git pull in this project to get the newest features."
@@ -77,3 +75,19 @@ echo -e "${CLR_8} ↳ ${CLR_7}Apply one of the listed prompts available."
 
 echo -e "${CLR_F}💻 ${CLR_C}list_prompts"
 echo -e "${CLR_8} ↳ ${CLR_7}Shows the prompts installed in this project."
+
+echo -e "\n${CLR_B}## Multi Script tools:"
+echo -e "${CLR_8} ↳ ${CLR_8}More in depth description of what is available in \`ms\` command!\n"
+
+echo -e "${CLR_F}💻 ${CLR_C}ms convert [option] [search_type] [file]"
+echo -e "${CLR_8} ↳ ${CLR_7}Convert file or files following a pre-defined configuration. If options are not passed, it'll ask one by one (or the ones missing)."
+echo -e "${CLR_8} ↳ ${CLR_7}This script uses FFMPEG and MAGICK to convert video and photo files in single or bulk way."
+echo -e "${CLR_8} ↳ ${CLR_7}For now its de-log is calibrated for Samsung Log only."
+
+echo -e "${CLR_F}💻 ${CLR_C}ms gallery_sort"
+echo -e "${CLR_8} ↳ ${CLR_7}Based on many file name formats, it tries to move all video and photo files to folders in YEAR/MONTH/DAY/file format."
+
+echo -e "${CLR_F}💻 ${CLR_C}ms help"
+echo -e "${CLR_8} ↳ ${CLR_7}This help!"
+
+
