@@ -47,7 +47,7 @@ edit_profile() {
 }
 
 remove_profile() {
-    local -r profile="${1:-${CFG_PROFILE:-}}"
+    local -r profile="${1:-}"
 
     if [[ -z "$profile" ]]; then
         printf "${CLR_1}[!]${CLR_R} Profile not set nor given.\n";

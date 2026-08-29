@@ -7,7 +7,9 @@ source "$SETTINGS_FILE";
 set_global_env() {
     local -r key="${1:-}";
     local -r value="${2:-}";
-    local -r file="${3:-$SETTINGS_FILE}"
+    local -r file="${3:-$SETTINGS_CFG_NAME}";
+
+    local -r file_path="$SETTINGS_PATH/${file}.sh";
 
     if [[ -z "$key" ]]; then
         echo "Usage: <command> <key> <value> [profile]";
@@ -19,12 +21,12 @@ set_global_env() {
     local escaped_value=$(printf '%s\n' "$value" | sed -e 's/[\/&|\\]/\\&/g')
 
     # Replace existing export line or append if non-existent
-    if grep -qE "^[[:space:]]*export[[:space:]]+${key}=" "$file" 2>/dev/null; then
-        sed -i "s|^[[:space:]]*export[[:space:]]\+${key}=.*|export ${key}=\"${escaped_value}\"|" "$file"
+    if grep -qE "^[[:space:]]*export[[:space:]]+${key}=" "$file_path" 2>/dev/null; then
+        sed -i "s|^[[:space:]]*export[[:space:]]\+${key}=.*|export ${key}=\"${escaped_value}\"|" "$file_path"
     else
         # Ensure target file ends with a newline before appending
-        [ -s "$file" ] && [ -n "$(tail -c 1 "$file")" ] && echo >> "$file"
-        printf 'export %s="%s"\n' "$key" "$value" >> "$file"
+        [ -s "$file_path" ] && [ -n "$(tail -c 1 "$file_path")" ] && echo >> "$file_path"
+        printf 'export %s="%s"\n' "$key" "$value" >> "$file_path"
     fi
 
     export "$key=$value";

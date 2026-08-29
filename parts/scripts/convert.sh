@@ -1,3 +1,6 @@
+# Convert is a script about compressing, and/or converting video and photo files in one go.
+# Currently available for NVENC and x264
+
 kind="${1:-}"; # compress, log2rec709, log2prores
 type="${2:-}"; # file, folder, recursive
 file="${3:-}"; # <file> if type=="file"
@@ -6,7 +9,7 @@ trash_path="$PWD/.converted";
 mkdir -p "$trash_path"
 
 while [[ -z "$kind" ]]; do
-    echo -n "- What type of conversion you want? [compress, compresshq, edit, log2rec709, compresslog2rec709, slog2rec709, compressslog2rec709, log2prores]: ";
+    echo -n "- What type of conversion you want? [compress, compresshq, edit, log2rec709, compresslog2rec709, log2prores]: ";
     read -p "" kind;
 done
 while [[ -z "$type" ]]; do
@@ -132,7 +135,7 @@ case "$kind" in
         vid_cls="bt709";
         vid_cpr="bt709";
         vid_trc="bt709";
-        vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
+        vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/luts/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
     ;;
     "log2rec709")
         if [[ $HAS_NVIDIA == true ]]; then
@@ -157,54 +160,6 @@ case "$kind" in
         vid_cpr="bt709";
         vid_trc="bt709";
         vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
-    ;;
-    "compressslog2rec709")
-        if [[ $HAS_NVIDIA == true ]]; then
-            [[ -z "$vid_cq" ]] && vid_cq=37;
-            [[ -z "$vid_pr" ]] && vid_pr="p7";
-            [[ -z "$vid_tn" ]] && vid_tn="hq";
-            [[ -z "$vid_pf" ]] && vid_pf="main";
-        else
-            [[ -z "$vid_cq" ]] && vid_cq=31;
-            [[ -z "$vid_pr" ]] && vid_pr="slow";
-            [[ -z "$vid_tn" ]] && vid_tn="film";
-            [[ -z "$vid_pf" ]] && vid_pf="high";
-        fi
-
-        [[ -z "$jpg_cq" ]] && jpg_cq=40;
-        [[ -z "$vid_sc" ]] && vid_sc="9";
-        [[ -z "$vid_la" ]] && vid_la="40";
-        [[ -z "$vid_ak" ]] && vid_ak="128";
-        [[ -z "$vid_am" ]] && vid_am="false";
-        vid_px="yuv420p";
-        vid_cls="bt709";
-        vid_cpr="bt709";
-        vid_trc="bt709";
-        vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/lut2.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
-    ;;
-    "slog2rec709")
-        if [[ $HAS_NVIDIA == true ]]; then
-            [[ -z "$vid_cq" ]] && vid_cq=24;
-            [[ -z "$vid_pr" ]] && vid_pr="p7";
-            [[ -z "$vid_tn" ]] && vid_tn="hq";
-            [[ -z "$vid_pf" ]] && vid_pf="main";
-        else
-            [[ -z "$vid_cq" ]] && vid_cq=18;
-            [[ -z "$vid_pr" ]] && vid_pr="slow";
-            [[ -z "$vid_tn" ]] && vid_tn="film";
-            [[ -z "$vid_pf" ]] && vid_pf="high";
-        fi
-
-        [[ -z "$jpg_cq" ]] && jpg_cq=70;
-        [[ -z "$vid_sc" ]] && vid_sc="0";
-        [[ -z "$vid_la" ]] && vid_la="40";
-        [[ -z "$vid_ak" ]] && vid_ak="256";
-        [[ -z "$vid_am" ]] && vid_am="false";
-        vid_px="yuv420p";
-        vid_cls="bt709";
-        vid_cpr="bt709";
-        vid_trc="bt709";
-        vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/lut2.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
     ;;
     "log2prores")
         vid_ext="mov";
