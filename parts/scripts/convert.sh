@@ -159,7 +159,7 @@ case "$kind" in
         vid_cls="bt709";
         vid_cpr="bt709";
         vid_trc="bt709";
-        vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
+        vid_fil=("format=gbrpf32le" "lut3d='$SCRIPT_DIR/luts/lut.cube'" "hue=s=1.00" "format=yuv420p" "setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709")
     ;;
     "log2prores")
         vid_ext="mov";
